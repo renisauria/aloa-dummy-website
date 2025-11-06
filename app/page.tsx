@@ -14,6 +14,7 @@ export default function Home() {
   const pinnedSectionRef = useRef<HTMLDivElement>(null)
   const horizontalRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
+  const heartsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -189,7 +190,116 @@ export default function Home() {
 
     }, mainRef)
 
-    return () => ctx.revert()
+    // Magical hearts animation when reaching bottom
+    let hasTriggered = false
+    const createFloatingHearts = () => {
+      if (!heartsContainerRef.current || hasTriggered) return
+      hasTriggered = true
+
+      // Rainbow hearts with CSS colors
+      const rainbowHearts = [
+        { emoji: '❤️', color: '#ff0000' },  // Red
+        { emoji: '🧡', color: '#ff7f00' },  // Orange
+        { emoji: '💛', color: '#ffff00' },  // Yellow
+        { emoji: '💚', color: '#00ff00' },  // Green
+        { emoji: '💙', color: '#0000ff' },  // Blue
+        { emoji: '💜', color: '#8b00ff' },  // Purple
+        { emoji: '💖', color: '#ff69b4' },  // Pink
+        { emoji: '💗', color: '#ffb6c1' },  // Light Pink
+        { emoji: '💕', color: '#ff1493' },  // Deep Pink
+      ]
+
+      const heartCount = 40
+      const sparkleCount = 80
+
+      // Create hearts
+      for (let i = 0; i < heartCount; i++) {
+        setTimeout(() => {
+          const randomHeart = rainbowHearts[Math.floor(Math.random() * rainbowHearts.length)]
+          const heart = document.createElement('div')
+          heart.innerHTML = randomHeart.emoji
+          heart.style.position = 'fixed'
+          heart.style.fontSize = `${Math.random() * 40 + 25}px`
+          heart.style.left = `${Math.random() * 100}%`
+          heart.style.bottom = '-50px'
+          heart.style.zIndex = '9999'
+          heart.style.pointerEvents = 'none'
+          heart.style.textShadow = `0 0 15px ${randomHeart.color}, 0 0 30px ${randomHeart.color}`
+
+          heartsContainerRef.current?.appendChild(heart)
+
+          gsap.to(heart, {
+            y: -window.innerHeight - 100,
+            x: `${(Math.random() - 0.5) * 300}px`,
+            rotation: Math.random() * 720 - 360,
+            opacity: 0,
+            scale: Math.random() * 0.5 + 0.8,
+            duration: Math.random() * 4 + 3,
+            ease: 'power1.out',
+            onComplete: () => heart.remove(),
+          })
+        }, i * 80)
+      }
+
+      // Create sparkles as separate elements
+      for (let i = 0; i < sparkleCount; i++) {
+        setTimeout(() => {
+          const sparkle = document.createElement('div')
+          const size = Math.random() * 6 + 3
+          sparkle.style.position = 'fixed'
+          sparkle.style.width = `${size}px`
+          sparkle.style.height = `${size}px`
+          sparkle.style.left = `${Math.random() * 100}%`
+          sparkle.style.bottom = '-20px'
+          sparkle.style.zIndex = '9998'
+          sparkle.style.pointerEvents = 'none'
+
+          // Create sparkle effect with multiple box shadows
+          const colors = ['#ffffff', '#ffd700', '#ffff00', '#ff69b4', '#ff1493', '#00ffff', '#ff00ff']
+          const color = colors[Math.floor(Math.random() * colors.length)]
+          sparkle.style.background = color
+          sparkle.style.borderRadius = '50%'
+          sparkle.style.boxShadow = `
+            0 0 ${size * 2}px ${color},
+            0 0 ${size * 4}px ${color},
+            0 0 ${size * 6}px ${color}
+          `
+
+          heartsContainerRef.current?.appendChild(sparkle)
+
+          gsap.to(sparkle, {
+            y: -window.innerHeight - 150,
+            x: `${(Math.random() - 0.5) * 400}px`,
+            opacity: 0,
+            scale: Math.random() * 2 + 0.5,
+            duration: Math.random() * 5 + 2,
+            ease: 'power1.inOut',
+            onComplete: () => sparkle.remove(),
+          })
+        }, i * 40)
+      }
+
+      setTimeout(() => {
+        hasTriggered = false
+      }, 5000)
+    }
+
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+
+      if (scrollTop + windowHeight >= documentHeight - 100) {
+        createFloatingHearts()
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      ctx.revert()
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   return (
@@ -336,8 +446,12 @@ export default function Home() {
               </div>
               <div className="relative h-[600px] hidden lg:block">
                 <div className="absolute inset-0 rounded-3xl blur-3xl" style={{ background: 'linear-gradient(to bottom right, rgba(139, 109, 255, 0.2), rgba(255, 92, 141, 0.2))' }}></div>
-                <div className="relative h-full flex items-center justify-center text-9xl">
-                  🦄
+                <div className="relative h-full flex items-center justify-center">
+                  <img
+                    src="/unicorn.jpeg"
+                    alt="Majestic unicorn with rainbow mane"
+                    className="max-w-full max-h-full object-contain rounded-3xl hover:scale-105 transition-transform duration-700"
+                  />
                 </div>
               </div>
             </div>
@@ -482,6 +596,9 @@ export default function Home() {
           </p>
         </div>
       </footer>
+
+      {/* Magical hearts and sparkles container */}
+      <div ref={heartsContainerRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 9999 }}></div>
 
     </main>
   )
