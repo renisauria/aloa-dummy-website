@@ -193,9 +193,9 @@ export default function Home() {
   }, [])
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white overflow-hidden grid-pattern noise-texture">
+    <main ref={mainRef} className="min-h-screen text-white overflow-hidden grid-pattern noise-texture" style={{ background: 'linear-gradient(to bottom right, #2d1a5a, #4a2890, #2d1a5a)' }}>
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-slate-950/50 border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-white/10" style={{ backgroundColor: 'rgba(45, 26, 90, 0.8)' }}>
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-3xl">🦄</span>
@@ -205,7 +205,7 @@ export default function Home() {
             <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
             <a href="#gallery" className="text-gray-300 hover:text-white transition-colors">Gallery</a>
             <a href="#about" className="text-gray-300 hover:text-white transition-colors">About</a>
-            <button className="px-6 py-2 bg-gradient-to-r from-brand-600 to-brand-500 rounded-full font-semibold hover:scale-105 transition-transform">
+            <button className="px-6 py-2 rounded-full font-semibold hover:scale-105 transition-transform" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)' }}>
               Get Started
             </button>
           </div>
@@ -216,13 +216,13 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated background gradient */}
         <div className="absolute inset-0 opacity-50">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-900/40 via-purple-900/30 to-accent-900/20"></div>
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom right, rgba(88, 48, 179, 0.4), rgba(106, 59, 219, 0.3), rgba(143, 23, 64, 0.2))' }}></div>
         </div>
 
         {/* Floating orbs */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-brand-500/30 rounded-full blur-3xl" style={{ animation: 'float 6s ease-in-out infinite' }}></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent-500/30 rounded-full blur-3xl" style={{ animation: 'float 6s ease-in-out infinite 2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl" style={{ animation: 'float 6s ease-in-out infinite 4s' }}></div>
+        <div className="absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(139, 109, 255, 0.3)', animation: 'float 6s ease-in-out infinite' }}></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(255, 92, 141, 0.3)', animation: 'float 6s ease-in-out infinite 2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(139, 109, 255, 0.2)', animation: 'float 6s ease-in-out infinite 4s' }}></div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-32 text-center perspective-1000">
           <div className="mb-8">
@@ -246,9 +246,9 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
-            <button className="group relative px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-500 rounded-full font-semibold text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-2xl hover:shadow-brand-500/50">
+            <button className="group relative px-8 py-4 rounded-full font-semibold text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-2xl" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)' }}>
               <span className="relative z-10">Explore the Magic</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-500 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(to right, #8b6dff, #ff5c8d)' }}></div>
             </button>
             <button className="px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full font-semibold text-lg hover:bg-white/10 hover:border-white/40 transition-all">
               Learn More
@@ -266,7 +266,7 @@ export default function Home() {
 
       {/* Parallax Section */}
       <section ref={parallaxRef} className="relative h-[150vh] flex items-center justify-center overflow-hidden">
-        <div className="parallax-layer absolute inset-0 bg-gradient-to-b from-brand-900/20 to-transparent"></div>
+        <div className="parallax-layer absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(74, 40, 144, 0.2), transparent)' }}></div>
         <div className="parallax-layer absolute inset-0 flex items-center justify-center">
           <div className="text-center max-w-5xl mx-auto px-6">
             <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 gradient-text">
@@ -277,12 +277,12 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="parallax-layer absolute bottom-0 w-full h-1/3 bg-gradient-to-t from-slate-950 to-transparent"></div>
+        <div className="parallax-layer absolute bottom-0 w-full h-1/3" style={{ background: 'linear-gradient(to top, #2d1a5a, transparent)' }}></div>
       </section>
 
       {/* Stats Section */}
       <section ref={statsRef} className="py-32 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-950/20 to-transparent"></div>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, rgba(45, 26, 90, 0.2), transparent)' }}></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -335,7 +335,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="relative h-[600px] hidden lg:block">
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-500/20 to-accent-500/20 rounded-3xl blur-3xl"></div>
+                <div className="absolute inset-0 rounded-3xl blur-3xl" style={{ background: 'linear-gradient(to bottom right, rgba(139, 109, 255, 0.2), rgba(255, 92, 141, 0.2))' }}></div>
                 <div className="relative h-full flex items-center justify-center text-9xl">
                   🦄
                 </div>
@@ -449,9 +449,9 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="cta-section py-32 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-950/30 to-transparent"></div>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, transparent, rgba(45, 26, 90, 0.3), transparent)' }}></div>
         <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
-          <div className="p-16 bg-gradient-to-br from-brand-600/20 to-accent-600/20 backdrop-blur-sm border border-white/10 rounded-3xl">
+          <div className="p-16 backdrop-blur-sm border border-white/10 rounded-3xl" style={{ background: 'linear-gradient(to bottom right, rgba(122, 77, 255, 0.2), rgba(240, 49, 109, 0.2))' }}>
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
               Begin Your Journey
             </h2>
@@ -459,7 +459,7 @@ export default function Home() {
               Join thousands of believers who have discovered the magic of unicorns. Your legendary adventure starts here.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <button className="px-10 py-5 bg-gradient-to-r from-brand-600 to-brand-500 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-lg shadow-brand-500/50 hover:shadow-2xl hover:shadow-brand-500/70">
+              <button className="px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-lg hover:shadow-2xl" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)', boxShadow: '0 10px 15px -3px rgba(139, 109, 255, 0.5)' }}>
                 Start Exploring
               </button>
               <button className="px-10 py-5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 hover:border-white/40 transition-all">
