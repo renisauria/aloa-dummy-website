@@ -374,6 +374,71 @@ export default function Home() {
 
     window.addEventListener('scroll', handleScroll)
 
+    // Button sparkle effects
+    const buttons = [
+      ...document.querySelectorAll('.hero-button-1'),
+      ...document.querySelectorAll('.hero-button-2'),
+      ...document.querySelectorAll('.cta-button-1'),
+      ...document.querySelectorAll('.cta-button-2'),
+    ]
+
+    const createButtonSparkles = (button: Element) => {
+      const rect = button.getBoundingClientRect()
+      const sparkleCount = 5
+
+      for (let i = 0; i < sparkleCount; i++) {
+        setTimeout(() => {
+          const sparkle = document.createElement('div')
+          const size = Math.random() * 8 + 4
+
+          // Random position around the button perimeter
+          const angle = Math.random() * Math.PI * 2
+          const distance = 20 + Math.random() * 10
+          const startX = rect.left + rect.width / 2 + Math.cos(angle) * distance
+          const startY = rect.top + rect.height / 2 + Math.sin(angle) * distance
+
+          sparkle.style.position = 'fixed'
+          sparkle.style.width = `${size}px`
+          sparkle.style.height = `${size}px`
+          sparkle.style.left = `${startX}px`
+          sparkle.style.top = `${startY}px`
+          sparkle.style.zIndex = '1'
+          sparkle.style.pointerEvents = 'none'
+
+          // Sparkle colors matching your theme
+          const colors = ['#ffffff', '#ffd700', '#ffff00', '#ff69b4', '#8b6dff', '#ff5c8d']
+          const color = colors[Math.floor(Math.random() * colors.length)]
+          sparkle.style.background = color
+          sparkle.style.borderRadius = '50%'
+          sparkle.style.boxShadow = `
+            0 0 ${size * 2}px ${color},
+            0 0 ${size * 4}px ${color},
+            0 0 ${size * 6}px ${color}
+          `
+
+          document.body.appendChild(sparkle)
+
+          // Animate outward and fade
+          const moveX = Math.cos(angle) * (100 + Math.random() * 100)
+          const moveY = Math.sin(angle) * (100 + Math.random() * 100)
+
+          gsap.to(sparkle, {
+            x: moveX,
+            y: moveY,
+            opacity: 0,
+            scale: Math.random() * 2 + 0.5,
+            duration: Math.random() * 1.5 + 1,
+            ease: 'power2.out',
+            onComplete: () => sparkle.remove(),
+          })
+        }, i * 50)
+      }
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener('mouseenter', () => createButtonSparkles(button))
+    })
+
     return () => {
       ctx.revert()
       window.removeEventListener('scroll', handleScroll)
@@ -434,11 +499,11 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
-            <button className="group relative px-8 py-4 rounded-full font-semibold text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-2xl" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)' }}>
+            <button className="hero-button-1 group relative px-8 py-4 rounded-full font-semibold text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-2xl z-10" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)' }}>
               <span className="relative z-10">Explore the Magic</span>
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(to right, #8b6dff, #ff5c8d)' }}></div>
+              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(to right, #8b6dff, #ff5c8d)' }}></div>
             </button>
-            <button className="px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full font-semibold text-lg hover:bg-white/10 hover:border-white/40 transition-all">
+            <button className="hero-button-2 px-8 py-4 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full font-semibold text-lg hover:bg-white/10 hover:border-white/40 transition-all z-10">
               Learn More
             </button>
           </div>
@@ -688,10 +753,10 @@ export default function Home() {
               Join thousands of believers who have discovered the magic of unicorns. Your legendary adventure starts here.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <button className="px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-lg hover:shadow-2xl" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)', boxShadow: '0 10px 15px -3px rgba(139, 109, 255, 0.5)' }}>
+              <button className="cta-button-1 px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-lg hover:shadow-2xl z-10" style={{ background: 'linear-gradient(to right, #7a4dff, #8b6dff)', boxShadow: '0 10px 15px -3px rgba(139, 109, 255, 0.5)' }}>
                 Start Exploring
               </button>
-              <button className="px-10 py-5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 hover:border-white/40 transition-all">
+              <button className="cta-button-2 px-10 py-5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 hover:border-white/40 transition-all z-10">
                 View Gallery
               </button>
             </div>
