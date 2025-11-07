@@ -11,6 +11,7 @@ export default function Home() {
   const heroTextRef = useRef<HTMLHeadingElement>(null)
   const heroSubtextRef = useRef<HTMLParagraphElement>(null)
   const parallaxRef = useRef<HTMLDivElement>(null)
+  const legendaryTextRef = useRef<HTMLHeadingElement>(null)
   const pinnedSectionRef = useRef<HTMLDivElement>(null)
   const horizontalRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
@@ -64,20 +65,49 @@ export default function Home() {
         })
       }
 
-      // Parallax background layers
-      if (parallaxRef.current) {
-        const layers = parallaxRef.current.querySelectorAll('.parallax-layer')
-        layers.forEach((layer, index) => {
-          const speed = (index + 1) * 0.5
-          gsap.to(layer, {
-            y: () => window.innerHeight * speed,
-            scrollTrigger: {
-              trigger: parallaxRef.current,
-              start: 'top top',
-              end: 'bottom top',
-              scrub: true,
-            },
+      // Legendary Creatures text split animation
+      if (legendaryTextRef.current) {
+        const text = legendaryTextRef.current.textContent || ''
+        const words = text.split(' ')
+
+        // Split into words with individual characters, preserving gradient on each char
+        legendaryTextRef.current.innerHTML = words
+          .map(word => {
+            const chars = word.split('').map(char =>
+              `<span class="inline-block char" style="display: inline-block; background: linear-gradient(to bottom, #ffffff, #f8f8ff, #f0f0f8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${char}</span>`
+            ).join('')
+            return `<span class="inline-block word" style="display: inline-block;">${chars}</span>`
           })
+          .join('<span style="display: inline-block; width: 0.25em;"></span>')
+
+        const charElements = legendaryTextRef.current.querySelectorAll('.char')
+
+        // Initial state - hidden below with perspective rotation
+        gsap.set(charElements, {
+          opacity: 0,
+          y: 80,
+          rotationX: -90,
+          transformOrigin: 'center bottom',
+        })
+
+        ScrollTrigger.create({
+          trigger: legendaryTextRef.current,
+          start: 'top 80%',
+          once: true,
+          onEnter: () => {
+            gsap.to(charElements, {
+              opacity: 1,
+              y: 0,
+              rotationX: 0,
+              duration: 1.2,
+              stagger: {
+                amount: 1,
+                from: 'start',
+                ease: 'power2.inOut',
+              },
+              ease: 'power4.out',
+            })
+          },
         })
       }
 
@@ -157,21 +187,69 @@ export default function Home() {
       }
 
       // Feature cards stagger animation
+      const cardsSection = document.querySelector('#about')
       const cards = document.querySelectorAll('.feature-card')
-      cards.forEach((card, index) => {
-        gsap.from(card, {
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-            end: 'top 30%',
-            scrub: 1,
+
+      if (cardsSection && cards.length > 0) {
+        gsap.set(cards, { opacity: 0, y: 80, rotation: -3, scale: 0.95 })
+
+        ScrollTrigger.create({
+          trigger: cardsSection,
+          start: 'top 75%',
+          once: true,
+          onEnter: () => {
+            gsap.to(cards, {
+              opacity: 1,
+              y: 0,
+              rotation: 0,
+              scale: 1,
+              duration: 0.8,
+              stagger: {
+                amount: 0.6,
+                from: 'start',
+                ease: 'power2.out',
+              },
+              ease: 'power3.out',
+            })
           },
-          opacity: 0,
-          y: 100,
-          rotation: -5,
-          scale: 0.9,
         })
-      })
+
+        // 3D hover effect for cards
+        cards.forEach((card) => {
+          const cardElement = card as HTMLElement
+          cardElement.style.transformStyle = 'preserve-3d'
+          cardElement.style.transition = 'transform 0.3s ease-out'
+
+          cardElement.addEventListener('mousemove', (e) => {
+            const rect = cardElement.getBoundingClientRect()
+            const x = e.clientX - rect.left
+            const y = e.clientY - rect.top
+            const centerX = rect.width / 2
+            const centerY = rect.height / 2
+            const rotateX = (y - centerY) / 10
+            const rotateY = (centerX - x) / 10
+
+            gsap.to(cardElement, {
+              rotationX: rotateX,
+              rotationY: rotateY,
+              z: 50,
+              transformPerspective: 1000,
+              duration: 0.3,
+              ease: 'power2.out',
+            })
+          })
+
+          cardElement.addEventListener('mouseleave', () => {
+            gsap.to(cardElement, {
+              rotationX: 0,
+              rotationY: 0,
+              z: 0,
+              duration: 0.5,
+              ease: 'power2.out',
+            })
+          })
+        })
+      }
 
       // CTA section animation
       const ctaSection = document.querySelector('.cta-section')
@@ -375,19 +453,56 @@ export default function Home() {
       </section>
 
       {/* Parallax Section */}
-      <section ref={parallaxRef} className="relative h-[150vh] flex items-center justify-center overflow-hidden">
-        <div className="parallax-layer absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(74, 40, 144, 0.2), transparent)' }}></div>
+      <section ref={parallaxRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="parallax-layer absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(74, 40, 144, 0.3), rgba(45, 26, 90, 0.2), transparent)' }}></div>
+
+        {/* Floating orbs for depth */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-30" style={{ background: 'radial-gradient(circle, rgba(139, 109, 255, 0.4), transparent)', animation: 'float 8s ease-in-out infinite' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-20" style={{ background: 'radial-gradient(circle, rgba(255, 92, 141, 0.4), transparent)', animation: 'float 10s ease-in-out infinite 2s' }}></div>
+
+        {/* Main content */}
         <div className="parallax-layer absolute inset-0 flex items-center justify-center">
-          <div className="text-center max-w-5xl mx-auto px-6">
-            <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 gradient-text">
+          <div className="text-center max-w-6xl mx-auto px-6">
+            {/* Unicorn emoji above vignette */}
+            <div className="mb-6 text-6xl opacity-100 relative z-10">
+              🦄
+            </div>
+
+            {/* Decorative element above title */}
+            <div className="mb-8 flex justify-center gap-3 opacity-60">
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+              <span className="text-2xl">✨</span>
+              <div className="w-16 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+            </div>
+
+            <h2 ref={legendaryTextRef} className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight preserve-3d" style={{
+              background: 'linear-gradient(to bottom, #ffffff, #f8f8ff, #f0f0f8)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              animation: 'textGlowPulse 4s ease-in-out infinite'
+            }}>
               Legendary Creatures
             </h2>
-            <p className="text-2xl md:text-3xl text-gray-300 font-light">
+
+            <p className="text-xl md:text-2xl lg:text-3xl text-gray-300 font-light leading-relaxed max-w-4xl mx-auto">
               Born from starlight and ancient magic, unicorns embody the perfect balance of grace and power
             </p>
+
+            {/* Decorative element below text */}
+            <div className="mt-12 flex justify-center items-center gap-2 opacity-40">
+              <div className="w-2 h-2 rounded-full bg-purple-400"></div>
+              <div className="w-24 h-px bg-gradient-to-r from-purple-400 via-pink-400 to-transparent"></div>
+              <div className="w-2 h-2 rounded-full bg-pink-400"></div>
+              <div className="w-24 h-px bg-gradient-to-l from-purple-400 via-pink-400 to-transparent"></div>
+              <div className="w-2 h-2 rounded-full bg-purple-400"></div>
+            </div>
           </div>
         </div>
-        <div className="parallax-layer absolute bottom-0 w-full h-1/3" style={{ background: 'linear-gradient(to top, #2d1a5a, transparent)' }}></div>
+
+        {/* Bottom gradient blend */}
+        <div className="parallax-layer absolute bottom-0 w-full h-1/2" style={{ background: 'linear-gradient(to top, rgba(45, 26, 90, 0.8), transparent)' }}></div>
       </section>
 
       {/* Stats Section */}
@@ -513,7 +628,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" style={{ perspective: '1000px' }}>
             {[
               {
                 icon: '🌟',
